@@ -22,3 +22,4 @@ while IFS=, read -r _ _ BOOK CHAPTERS _; do
         fi
     done
 done < <(tail -n +2 Books.csv)
+tar -czf esv-bible.tar.gz **/*.html
