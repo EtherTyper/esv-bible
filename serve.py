@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 from http import server
 
 class UnicodeHTTPRequestHandler(server.SimpleHTTPRequestHandler):
