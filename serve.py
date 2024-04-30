@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
-from http import server
+from http.server import *
 
-class UnicodeHTTPRequestHandler(server.SimpleHTTPRequestHandler):
+class Handler(SimpleHTTPRequestHandler):
     def guess_type(self, path):
-        guess = server.SimpleHTTPRequestHandler.guess_type(self, path)
+        guess = SimpleHTTPRequestHandler.guess_type(self, path)
         if guess == 'text/html':
             return 'text/html; charset=utf-8'
         else:
             return guess
 
-httpd = server.HTTPServer(('', 8000), UnicodeHTTPRequestHandler)
+httpd = HTTPServer(('', 8000), Handler)
 httpd.serve_forever()
