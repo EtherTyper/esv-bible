@@ -10,24 +10,23 @@ class Handler(SimpleHTTPRequestHandler):
         super().__init__(*args, **kwargs)
 
     def do_GET(self):
+        path = unquote_plus(self.path[1:])
+
         try:
-            path = unquote_plus(self.path[1:])
-            file = self.tarball.getmember(path)
-            content = self.tarball.extractfile(path).read().decode("utf-8")
+            if path[-1] == '/':
+                content = 'Directory listing'
+            else:
+                content = self.tarball.extractfile(path).read().decode("utf-8")
 
             self.send_response(HTTPStatus.OK)
-            self.send_header("Content-type", 'text/html; charset=utf-8')
-            # self.send_header("Content-Length", file.size)
-            # self.send_header("Last-Modified", file.mtime)
-            self.end_headers()
-            self.wfile.write(bytes(content, "utf-8"))
         except KeyError:
             content = "Invalid path."
 
             self.send_response(HTTPStatus.NOT_FOUND)
-            self.send_header("Content-type", 'text/html; charset=utf-8')
-            self.end_headers()
-            self.wfile.write(bytes(content, "utf-8"))
+
+        self.send_header("Content-type", 'text/html; charset=utf-8')
+        self.end_headers()
+        self.wfile.write(bytes(content, "utf-8"))
 
 httpd = HTTPServer(('', 8000), Handler)
 httpd.serve_forever()
