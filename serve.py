@@ -1,13 +1,33 @@
 #!/usr/bin/env python3
-from http.server import *
+import tarfile
+from urllib.parse import unquote_plus
+from http import HTTPStatus
+from http.server import HTTPServer, SimpleHTTPRequestHandler
 
 class Handler(SimpleHTTPRequestHandler):
-    def guess_type(self, path):
-        guess = SimpleHTTPRequestHandler.guess_type(self, path)
-        if guess == 'text/html':
-            return 'text/html; charset=utf-8'
-        else:
-            return guess
+    def __init__(self, *args, **kwargs):
+        self.tarball = tarfile.open('./esv-bible.tar.gz')
+        super().__init__(*args, **kwargs)
+
+    def do_GET(self):
+        try:
+            path = unquote_plus(self.path[1:])
+            file = self.tarball.getmember(path)
+            content = self.tarball.extractfile(path).read().decode("utf-8")
+
+            self.send_response(HTTPStatus.OK)
+            self.send_header("Content-type", 'text/html; charset=utf-8')
+            # self.send_header("Content-Length", file.size)
+            # self.send_header("Last-Modified", file.mtime)
+            self.end_headers()
+            self.wfile.write(bytes(content, "utf-8"))
+        except KeyError:
+            content = "Invalid path."
+
+            self.send_response(HTTPStatus.NOT_FOUND)
+            self.send_header("Content-type", 'text/html; charset=utf-8')
+            self.end_headers()
+            self.wfile.write(bytes(content, "utf-8"))
 
 httpd = HTTPServer(('', 8000), Handler)
 httpd.serve_forever()
