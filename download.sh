@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 KEY=$(<apikey.txt)
+SLEEP=3.6
 
 FILES=()
 find . -type f -name '*.html' -empty -print -delete
@@ -20,7 +21,7 @@ while IFS=, read -r _ _ BOOK CHAPTERS _; do
 
         if [ ! -f "$FILE" ]
         then
-            sleep 1
+            sleep "$SLEEP"
             echo "Getting $FILE"
             curl -H "Authorization: Token $KEY" -G "https://api.esv.org/v3/passage/html/" --data-urlencode "q=$QUERY" --data-urlencode "include-audio-link=false" | jq -r .passages[] > "$FILE"
         fi
@@ -29,7 +30,7 @@ while IFS=, read -r _ _ BOOK CHAPTERS _; do
 
         if [ ! -f "$FILECROSSREF" ]
         then
-            sleep 1
+            sleep "$SLEEP"
             echo "Getting $FILECROSSREF"
             curl -H "Authorization: Token $KEY" -G "https://api.esv.org/v3/passage/html/" --data-urlencode "q=$QUERY" --data-urlencode "include-audio-link=false" --data-urlencode "include-crossrefs=true" | jq -r .passages[] > "$FILECROSSREF"
         fi
