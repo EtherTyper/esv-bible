@@ -12,7 +12,7 @@ do
     OLDFILECROSSREF="crossrefs/Psalms/Psalms $i.html"
     NEWFILECROSSREF="crossrefs/Psalm/Psalm $i.html"
 
-    [ -f "$OLDFILECROSSREF" ] && mv "$OLDFILECROSSREF" "$NEWFILECROSSREF"
+    [ -f "$OLDFILECROSSREF" ] && mv -n "$OLDFILECROSSREF" "$NEWFILECROSSREF"
 done
 
 rm -df Psalms crossrefs/Psalms
