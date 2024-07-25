@@ -14,7 +14,7 @@ while IFS=, read -r _ _ BOOK CHAPTERS _; do
             QUERY="$BOOK"
         fi
 
-        mkdir -p "$BOOK"
+        mkdir -p "$BOOK" "crossrefs/$BOOK"
         FILE="$BOOK/$QUERY.html"
         FILES+=("$FILE")
 
@@ -25,7 +25,6 @@ while IFS=, read -r _ _ BOOK CHAPTERS _; do
             curl -H "Authorization: Token $KEY" -G "https://api.esv.org/v3/passage/html/" --data-urlencode "q=$QUERY" --data-urlencode "include-audio-link=false" | jq -r .passages[] > "$FILE"
         fi
 
-        mkdir -p "crossrefs/$BOOK"
         FILECROSSREF="crossrefs/$FILE"
 
         if [ ! -f "$FILECROSSREF" ]
