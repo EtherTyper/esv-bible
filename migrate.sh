@@ -7,18 +7,12 @@ do
     OLDFILE="Psalms/Psalms $i.html"
     NEWFILE="Psalm/Psalm $i.html"
 
-    if [ -f "$OLDFILE" ]
-    then
-        mv "$OLDFILE" "$NEWFILE"
-    fi
+    [ -f "$OLDFILE" ] && mv -n "$OLDFILE" "$NEWFILE"
 
     OLDFILECROSSREF="crossrefs/Psalms/Psalms $i.html"
     NEWFILECROSSREF="crossrefs/Psalm/Psalm $i.html"
 
-    if [ -f "$OLDFILECROSSREF" ]
-    then
-        mv "$OLDFILECROSSREF" "$NEWFILECROSSREF"
-    fi
+    [ -f "$OLDFILECROSSREF" ] && mv "$OLDFILECROSSREF" "$NEWFILECROSSREF"
 done
 
 rm -df Psalms crossrefs/Psalms
